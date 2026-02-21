@@ -34,7 +34,12 @@ async def get_status_async(session, url: str):
     async with session.get(url) as resp:
         return  url,resp.status
 
+# there are two variants TaskGroup.create_task and asyncio.create_task
+# taskgroup is always recommended - for prod code
+# asyncio.gather takes list of coroutines as input arg.. whereas taskgroup 
 
+# coroutine is just a function that can be awaited
+# whereas create_task creates a running async fn or scheduled
 async def usingAsyncIO():
     import aiohttp
 
