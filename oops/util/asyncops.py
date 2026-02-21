@@ -74,6 +74,7 @@ def get_status(url: str):
 # when we are using libraries - like aiohttp which supports asyncio calls threadpoolexecutor not required
 # and we can use asyncio
 
+# this gets results in one go
 def usingThreadPoolExecuter():
 
     urls = ["https://google.com", "https://python.org", "https://github.com"]
@@ -81,7 +82,7 @@ def usingThreadPoolExecuter():
     with ThreadPoolExecutor() as executor: 
         results = executor.map(get_status, urls)
 
-    print(list(results))
+    print(list(results))  
 
 def usingThreadPoolExecuterSubmit():
 
@@ -97,3 +98,20 @@ def usingThreadPoolExecuterSubmit():
 
 # usingThreadPoolExecuter()
 # usingThreadPoolExecuterSubmit()
+
+
+# asynio.to_thread()  --> to convert blocking sync call into a coroutine
+#  loop.run_in_executor  --> advanced scenarios
+
+# asyncio failures/ retries/ cancellation
+# synchronization primitives -- basic concepts
+# streaming / generator
+# queues
+# pydantic example
+# starlette
+# fastapi - routes
+# fastapi - middleware
+# fastapi - exception handling
+# fastapi -deployment
+# fastapi -traceability
+# take quiz
