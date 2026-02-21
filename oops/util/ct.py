@@ -2,7 +2,8 @@
 # asyncio functionality, coroutines, Threadpoolexecutor,
 
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor,as_completed
+
 
 
 async def fn1(num: int):
@@ -27,12 +28,67 @@ async def main():
 
 # asyncio.run(main())
 
-# def get_status():
+async def get_status_async(session, url: str):
+    
+
+    async with session.get(url) as resp:
+        return  url,resp.status
 
 
-# def usingThreadPoolExecuter():
+async def usingAsyncIO():
+    import aiohttp
 
-#     urls = ["https://google.com", "https://python.org", "https://github.com"]
+    urls = ["https://google.com", "https://python.org", "https://github.com"]
 
-#     with ThreadPoolExecutor as executor:
-#         executor.
+    async with aiohttp.ClientSession() as session:
+        async with asyncio.TaskGroup() as tg:
+            tasks = [tg.create_task(get_status_async(session,url)) for url in urls]
+
+            for done in asyncio.as_completed(tasks):
+                url, status = await done
+                print('completed:', url, status)
+
+asyncio.run(usingAsyncIO())
+
+def get_status(url: str):
+    import requests
+
+    response = requests.get(url)
+    return response.status_code
+
+
+
+# ThreadPoolExecutor is mostly required when the thread is going to make a blocking call (event loop).
+# This would avoid blocking the event loop
+
+# InterpreterPoolExecuter will be useful for CPU intensive work - when nogil is enabled
+#  every thread will get its own gil and memory thereby really enabling CPU bound tasks
+
+# In threadpoolexecutor scenario multiple threads always share the same gil - so same limitation
+
+# when we are using libraries - like aiohttp which supports asyncio calls threadpoolexecutor not required
+# and we can use asyncio
+
+def usingThreadPoolExecuter():
+
+    urls = ["https://google.com", "https://python.org", "https://github.com"]
+
+    with ThreadPoolExecutor() as executor: 
+        results = executor.map(get_status, urls)
+
+    print(list(results))
+
+def usingThreadPoolExecuterSubmit():
+
+    urls = ["https://google.com", "https://python.org", "https://github.com"]
+
+    with ThreadPoolExecutor() as executor: 
+        futures = [executor.submit(get_status, url) for url in urls]
+
+    for future in as_completed(futures): # pyright: ignore[reportArgumentType]
+        print(future.result())
+  
+
+
+# usingThreadPoolExecuter()
+# usingThreadPoolExecuterSubmit()
