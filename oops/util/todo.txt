@@ -1,4 +1,19 @@
-Aioodbc
-Aiohttp
-Asyncio - TaskGather, TaskGroup , ThreadPoolExecutor
-FastApi 
+# usingThreadPoolExecuter()
+# usingThreadPoolExecuterSubmit()
+
+
+# asynio.to_thread()  --> to convert blocking sync call into a coroutine
+#  loop.run_in_executor  --> advanced scenarios
+
+# asyncio failures/ retries/ cancellation
+# synchronization primitives -- basic concepts
+# streaming / generator
+# queues
+# pydantic example
+# starlette
+# fastapi - routes
+# fastapi - middleware
+# fastapi - exception handling
+# fastapi -deployment
+# fastapi -traceability
+# take quiz

@@ -2,8 +2,7 @@
 # asyncio functionality, coroutines, Threadpoolexecutor,
 
 import asyncio
-from concurrent.futures import ThreadPoolExecutor,as_completed
-
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 async def fn1(num: int):
@@ -28,15 +27,17 @@ async def main():
 
 # asyncio.run(main())
 
+
 async def get_status_async(session, url: str):
-    
 
     async with session.get(url) as resp:
-        return  url,resp.status
+        return url, resp.status
+
 
 # there are two variants TaskGroup.create_task and asyncio.create_task
 # taskgroup is always recommended - for prod code
-# asyncio.gather takes list of coroutines as input arg.. whereas taskgroup 
+# asyncio.gather takes list of coroutines as input arg.. whereas taskgroup
+
 
 # coroutine is just a function that can be awaited
 # whereas create_task creates a running async fn or scheduled
@@ -47,20 +48,21 @@ async def usingAsyncIO():
 
     async with aiohttp.ClientSession() as session:
         async with asyncio.TaskGroup() as tg:
-            tasks = [tg.create_task(get_status_async(session,url)) for url in urls]
+            tasks = [tg.create_task(get_status_async(session, url)) for url in urls]
 
             for done in asyncio.as_completed(tasks):
                 url, status = await done
-                print('completed:', url, status)
+                print("completed:", url, status)
+
 
 asyncio.run(usingAsyncIO())
+
 
 def get_status(url: str):
     import requests
 
     response = requests.get(url)
     return response.status_code
-
 
 
 # ThreadPoolExecutor is mostly required when the thread is going to make a blocking call (event loop).
@@ -74,44 +76,24 @@ def get_status(url: str):
 # when we are using libraries - like aiohttp which supports asyncio calls threadpoolexecutor not required
 # and we can use asyncio
 
+
 # this gets results in one go
 def usingThreadPoolExecuter():
 
     urls = ["https://google.com", "https://python.org", "https://github.com"]
 
-    with ThreadPoolExecutor() as executor: 
+    with ThreadPoolExecutor() as executor:
         results = executor.map(get_status, urls)
 
-    print(list(results))  
+    print(list(results))
+
 
 def usingThreadPoolExecuterSubmit():
 
     urls = ["https://google.com", "https://python.org", "https://github.com"]
 
-    with ThreadPoolExecutor() as executor: 
+    with ThreadPoolExecutor() as executor:
         futures = [executor.submit(get_status, url) for url in urls]
 
-    for future in as_completed(futures): # pyright: ignore[reportArgumentType]
+    for future in as_completed(futures):  # pyright: ignore[reportArgumentType]
         print(future.result())
-  
-
-
-# usingThreadPoolExecuter()
-# usingThreadPoolExecuterSubmit()
-
-
-# asynio.to_thread()  --> to convert blocking sync call into a coroutine
-#  loop.run_in_executor  --> advanced scenarios
-
-# asyncio failures/ retries/ cancellation
-# synchronization primitives -- basic concepts
-# streaming / generator
-# queues
-# pydantic example
-# starlette
-# fastapi - routes
-# fastapi - middleware
-# fastapi - exception handling
-# fastapi -deployment
-# fastapi -traceability
-# take quiz
